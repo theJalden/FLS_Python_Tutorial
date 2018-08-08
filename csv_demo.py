@@ -1,5 +1,7 @@
 import csv
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+
 
 import datetime
 
@@ -23,15 +25,20 @@ ff_reader = csv.reader(ff)
     
 for ii, xx in enumerate(ff_reader):
     if ii==0:
-        jj = [nn for nn in range(len(xx))]
-        print(makeDateTime(xx[123]))
+        dates = [makeDateTime(nn) for nn in xx[1:-5]]
     
-        dates = jj[1:-5]
     elif ii ==1:
         values = [ float(vv) for vv in xx[1:-5]]
 
 fig, ax = plt.subplots()
-
 plt.plot(dates,values)
+
+ax.grid(True)
+plt.ylim((50,70))
+plt.title('Labor Force Participation Rate')
+plt.xlabel('Year')
+plt.ylabel('Percent of Labor Force')
+
+fig.patch.set_facecolor('c')
 
 plt.show()
