@@ -21,6 +21,32 @@ class Face:
             zsum += vertexes[point][2]
         self.z_val = zsum / len(vertexes)
 
+
+# List of Faces -> List of Numbers
+# Compares an element in the list with the
+# element next to it, and "bubbles" the largest
+# element to the top each iteration
+# Returns the list of numbers sorted from smallest
+# to largest
+def bubbleFaceSort(nums):
+    iteration = 0
+    while iteration < len(nums) - 1:
+        num_i = 1
+        while num_i < len(nums) - iteration:
+            if nums[num_i - 1].z_val > nums[num_i].z_val:
+                # swap numbers at indexes
+                # nums_i and nums_i-1
+                temp = nums[num_i - 1]
+                nums[num_i - 1] = nums[num_i]
+                nums[num_i] = temp
+                
+            num_i += 1
+            continue
+
+        iteration += 1
+            
+    return nums   
+
 edges = [(0,1),
          (0,2),
          (1,3),
@@ -65,7 +91,7 @@ def rotateX(verts, angle) :
 
 def run():
     # initialize pygame
-    global vertexes
+    global vertexes, faces
     playing = False
     done = False
     wireframe = False
@@ -90,7 +116,7 @@ def run():
                     vertexes = rotateX(vertexes, np.pi/36)
                 elif ee.key == pg.K_DOWN:
                     vertexes = rotateX(vertexes, -np.pi/36)
-                elif ee.key == pg.K_X:
+                elif ee.key == pg.K_x:
                     wireframe = not wireframe
                 elif ee.key == pg.K_SPACE:
                     playing = not playing
@@ -132,10 +158,11 @@ def run():
         else:
             for face in faces:
                 face.updateZ()
-            import heapq
             # sort a list of faces by face.zval
-            
-
+            faces = bubbleFaceSort(faces)
+            for face in faces:
+                pg.draw.polygon(disp, face.color,
+                                [screen_coords.astype(np.int16)[nn] for nn in face.points])
         
 
         pg.display.flip()
